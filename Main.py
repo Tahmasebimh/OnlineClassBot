@@ -23,8 +23,11 @@ def start(update, context):
                            f"'{str(update.effective_chat.username)}', "
                            f"'{str(update.effective_chat.id)}', 'NULL' )")
         start_conn.commit()
+        cursor_start = start_conn.execute("SELECT * FROM USER")
+        users_list = cursor_start.fetchall()
         start_conn.close()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="به بات درس برنامه سازی پیشرفته خوش آمدید")
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="به بات درس برنامه سازی پیشرفته خوش آمدید")
     except ValueError:
         print(ValueError)
 
@@ -38,29 +41,58 @@ def echoImage(update, context):
          str(update.effective_chat.last_name)).mkdir(parents=True, exist_ok=True)
     urllib.request.urlretrieve(file.file_path, FILE_PATH + '/' + str(update.effective_chat.first_name) +
          str(update.effective_chat.last_name) + '/' + file.file_unique_id + '.' + passvnad)
-    context.bot.send_message(chat_id=update.effective_chat.id, text="عکس ارسالی ذخیره شد")
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="عکس ارسالی ذخیره شد",
+                             reply_markup=kb_markup)
+
+
+def getUserIdFromCharId(chat_id):
+    for user in users_list:
+        if user[4] == str(chat_id):
+            print(user[4])
+            return user[0]
 
 
 def handleTextMessage(update, context):
     print(update)
-    with open('comment/comments.csv', mode='a', encoding="utf-8", newline='') as first_csv_file:
-        inner_writer = csv.writer(first_csv_file)
-        message_text = str(update.message.text)
-        inner_writer.writerow([str(update.effective_chat.first_name),
+    if update.message.text == GET_MY_FILE_TEXT:
+        user_id = getUserIdFromCharId(update.effective_chat.id)
+        file_list_message = ''
+        for file in file_list:
+            if file[2] == user_id:
+                file_list_message = file_list_message + file[1] + "\n"
+        if len(file_list_message) > 0:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text=file_list_message,
+                                     reply_markup=kb_markup)
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="چیزی تحویل نداده اید",
+                                     reply_markup=kb_markup)
+    else:
+        with open('comment/comments.csv', mode='a', encoding="utf-8", newline='') as first_csv_file:
+            inner_writer = csv.writer(first_csv_file)
+            message_text = str(update.message.text)
+            inner_writer.writerow([str(update.effective_chat.first_name),
                                str(update.effective_chat.last_name),
                                str(update.effective_chat.username),
                                message_text])
-    first_csv_file.close()
-    context.bot.send_message(chat_id=update.effective_chat.id, text="پیام شما ذخیره شد با تشکر از شما")
+        first_csv_file.close()
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                text="پیام شما ذخیره شد با تشکر از شما",
+                                reply_markup=kb_markup)
 
 
 def caps(update, context):
     text_caps = ' '.join(context.args).upper()
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text=text_caps)
 
 
 def helpHandler(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  شماره  دانشجویی \n استفاده کنید")
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  شماره  دانشجویی \n استفاده کنید",
+                             reply_markup=kb_markup)
 
 
 def otherCalback(update, context):
@@ -70,7 +102,23 @@ def otherCalback(update, context):
     file = tele.PassportFile.get_file(bot.getFile(update.message.document.file_id)) \
         .download(FILE_PATH + '/' + str(update.effective_chat.first_name) +
          str(update.effective_chat.last_name) + '/' + str(update.message.document.file_name))
-    context.bot.send_message(chat_id=update.effective_chat.id, text="فایل ارسالی ذخیره شد")
+    file_conn = sqlite3.connect("user.db")
+
+    # file_conn.execute(f"INSERT INTO FILE (FILE_NAME, USER_ID) "
+    #                    f"VALUES ('{str(update.message.document.file_name)}', "
+    #                    f" '{str(rows[0][0])}')")
+    file_conn.execute(f"INSERT INTO FILE (FILE_NAME, USER_ID) "
+                       f"VALUES ('{str(update.message.document.file_name)}',"
+                      f" (SELECT ID FROM USER WHERE CHAT_ID='{str(update.effective_chat.id)}'))")
+    file_conn.commit()
+    cursor_file = file_conn.execute("SELECT * FROM FILE")
+    global file_list
+    file_list = cursor_file.fetchall()
+    print(file_list)
+    file_conn.close()
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="فایل ارسالی ذخیره شد",
+                             reply_markup=kb_markup)
 
 
 def handleStudentNumberCallBack(update, context):
@@ -80,14 +128,22 @@ def handleStudentNumberCallBack(update, context):
         student_conn.execute(
             f"UPDATE USER SET STUDENT_NUMBER = '{number}' where CHAT_ID = '{update.effective_chat.id}'")
         student_conn.commit()
+        cursor_start = student_conn.execute("SELECT * FROM USER")
+        global users_list
+        users_list = cursor_start.fetchall()
         student_conn.close()
-        context.bot.send_message(chat_id=update.effective_chat.id, text="شماره دانشجویی شما ذخیره شد")
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="شماره دانشجویی شما ذخیره شد",
+                                 reply_markup=kb_markup)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="ورودی نا معتبر است")
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="ورودی نا معتبر است",
+                                 reply_markup=kb_markup)
 
 
 TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
 FILE_PATH = "files"
+GET_MY_FILE_TEXT = 'فایل های تحویلی من'
 
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
@@ -121,14 +177,27 @@ if not os.path.isfile('comment/comments.csv'):
     csv_file.close()
 
 bot = tele.Bot(token=TOKEN)
-
+# kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton('تست')]]
+kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT)]]
+kb_markup = tele.ReplyKeyboardMarkup(kb)
 # Create data base
 conn = sqlite3.connect("user.db")
 conn.execute('''CREATE TABLE IF NOT EXISTS  USER 
          (ID INTEGER PRIMARY KEY AUTOINCREMENT   NOT NULL,
-         FIRST_NAME           TEXT  ,
-         LAST_NAME            TEXT    ,
-         USER_NAME        TEXT,
-         CHAT_ID         TEXT unique , 
+         FIRST_NAME           TEXT,
+         LAST_NAME            TEXT,
+         USER_NAME            TEXT,
+         CHAT_ID              TEXT unique , 
          STUDENT_NUMBER   TEXT NULLABLE );''')
+conn.execute('''CREATE TABLE IF NOT EXISTS FILE 
+            (ID INTEGER  PRIMARY KEY AUTOINCREMENT   NOT NULL,
+            FILE_NAME       TEXT, 
+            USER_ID         INTEGER NOT NULL, 
+                FOREIGN KEY(USER_ID) REFERENCES USER(ID) 
+                ON UPDATE CASCADE 
+                ON DELETE CASCADE);''')
+cursor = conn.execute("SELECT * FROM USER")
+users_list = cursor.fetchall()
+file_cursor = conn.execute("SELECT * FROM FILE")
+file_list = file_cursor.fetchall()
 conn.close()
