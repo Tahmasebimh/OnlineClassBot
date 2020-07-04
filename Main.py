@@ -91,7 +91,8 @@ def caps(update, context):
 
 def helpHandler(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  شماره  دانشجویی \n استفاده کنید",
+                             text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  شماره  دانشجویی \n استفاده کنید \n"
+                                  " تمامی فایل های ارسالی شما در حافظه بات ذخیره می شود لیست فایل های ارسالی خود را می توانید با استفاده از گزینه های زیر دریافت کنید.",
                              reply_markup=kb_markup)
 
 
@@ -179,7 +180,7 @@ if not os.path.isfile('comment/comments.csv'):
 bot = tele.Bot(token=TOKEN)
 # kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton('تست')]]
 kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT)]]
-kb_markup = tele.ReplyKeyboardMarkup(kb)
+kb_markup = tele.ReplyKeyboardMarkup(kb, resize_keyboard=str)
 # Create data base
 conn = sqlite3.connect("user.db")
 conn.execute('''CREATE TABLE IF NOT EXISTS  USER 
@@ -201,3 +202,4 @@ users_list = cursor.fetchall()
 file_cursor = conn.execute("SELECT * FROM FILE")
 file_list = file_cursor.fetchall()
 conn.close()
+
