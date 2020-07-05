@@ -40,7 +40,7 @@ def echoImage(update, context):
     Path(FILE_PATH + '/' + str(update.effective_chat.first_name) +
          str(update.effective_chat.last_name)).mkdir(parents=True, exist_ok=True)
     urllib.request.urlretrieve(file.file_path, FILE_PATH + '/' + str(update.effective_chat.first_name) +
-         str(update.effective_chat.last_name) + '/' + file.file_unique_id + '.' + passvnad)
+                               str(update.effective_chat.last_name) + '/' + file.file_unique_id + '.' + passvnad)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="عکس ارسالی ذخیره شد",
                              reply_markup=kb_markup)
@@ -53,34 +53,56 @@ def getUserIdFromCharId(chat_id):
             return user[0]
 
 
+def getFileId(text, user_id):
+    for file in file_list:
+        if file[3] == user_id:
+            if text == file[1]:
+                return file[2]
+
+
 def handleTextMessage(update, context):
     print(update)
-    if update.message.text == GET_MY_FILE_TEXT:
+
+    if update.message.text == BACK_TEXT:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="چه کاری انجام بدم؟",
+                                 reply_markup=kb_markup)
+    elif update.message.text == GET_MY_FILE_TEXT:
         user_id = getUserIdFromCharId(update.effective_chat.id)
         file_list_message = ''
+        keyboard_button = [[tele.KeyboardButton(GET_MY_FILE_TEXT)]]
+        keyboard_button_arrays = []
         for file in file_list:
-            if file[2] == user_id:
+            if file[3] == user_id:
+                keyboard_button_arrays.append([tele.KeyboardButton(file[1])])
                 file_list_message = file_list_message + file[1] + "\n"
-        if len(file_list_message) > 0:
+        if len(keyboard_button_arrays) > 0:
+            keyboard_button_arrays.append([BACK_TEXT])
+            print(str(len(keyboard_button_arrays)))
+            keyboard_button_markup = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
+                                                              resize_keyboard=str)
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text=file_list_message,
-                                     reply_markup=kb_markup)
+                                     reply_markup=keyboard_button_markup)
         else:
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text="چیزی تحویل نداده اید",
                                      reply_markup=kb_markup)
+    elif isFileName(update.message.text, getUserIdFromCharId(update.effective_chat.id)):
+        context.bot.send_document(chat_id=update.effective_chat.id,
+                                  document=getFileId(update.message.text, getUserIdFromCharId(update.effective_chat.id)))
     else:
         with open('comment/comments.csv', mode='a', encoding="utf-8", newline='') as first_csv_file:
             inner_writer = csv.writer(first_csv_file)
             message_text = str(update.message.text)
             inner_writer.writerow([str(update.effective_chat.first_name),
-                               str(update.effective_chat.last_name),
-                               str(update.effective_chat.username),
-                               message_text])
+                                   str(update.effective_chat.last_name),
+                                   str(update.effective_chat.username),
+                                   message_text])
         first_csv_file.close()
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                text="پیام شما ذخیره شد با تشکر از شما",
-                                reply_markup=kb_markup)
+                                 text="پیام شما ذخیره شد با تشکر از شما",
+                                 reply_markup=kb_markup)
 
 
 def caps(update, context):
@@ -102,14 +124,15 @@ def otherCalback(update, context):
          str(update.effective_chat.last_name)).mkdir(parents=True, exist_ok=True)
     file = tele.PassportFile.get_file(bot.getFile(update.message.document.file_id)) \
         .download(FILE_PATH + '/' + str(update.effective_chat.first_name) +
-         str(update.effective_chat.last_name) + '/' + str(update.message.document.file_name))
+                  str(update.effective_chat.last_name) + '/' + str(update.message.document.file_name))
     file_conn = sqlite3.connect("user.db")
 
     # file_conn.execute(f"INSERT INTO FILE (FILE_NAME, USER_ID) "
     #                    f"VALUES ('{str(update.message.document.file_name)}', "
     #                    f" '{str(rows[0][0])}')")
-    file_conn.execute(f"INSERT INTO FILE (FILE_NAME, USER_ID) "
-                       f"VALUES ('{str(update.message.document.file_name)}',"
+    file_conn.execute(f"INSERT INTO FILE (FILE_NAME, FILE_ID, USER_ID) "
+                      f"VALUES ('{str(update.message.document.file_name)}',"
+                      f" '{str(update.message.document.file_id)}',"
                       f" (SELECT ID FROM USER WHERE CHAT_ID='{str(update.effective_chat.id)}'))")
     file_conn.commit()
     cursor_file = file_conn.execute("SELECT * FROM FILE")
@@ -142,9 +165,18 @@ def handleStudentNumberCallBack(update, context):
                                  reply_markup=kb_markup)
 
 
+def isFileName(text, user_id):
+    for file in file_list:
+        if file[3] == user_id:
+            if text == file[1]:
+                return True
+    return False
+
+
 TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
 FILE_PATH = "files"
 GET_MY_FILE_TEXT = 'فایل های تحویلی من'
+BACK_TEXT = "بازگشت"
 
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
@@ -193,6 +225,7 @@ conn.execute('''CREATE TABLE IF NOT EXISTS  USER
 conn.execute('''CREATE TABLE IF NOT EXISTS FILE 
             (ID INTEGER  PRIMARY KEY AUTOINCREMENT   NOT NULL,
             FILE_NAME       TEXT, 
+            FILE_ID         TEXT,
             USER_ID         INTEGER NOT NULL, 
                 FOREIGN KEY(USER_ID) REFERENCES USER(ID) 
                 ON UPDATE CASCADE 
@@ -202,4 +235,3 @@ users_list = cursor.fetchall()
 file_cursor = conn.execute("SELECT * FROM FILE")
 file_list = file_cursor.fetchall()
 conn.close()
-
