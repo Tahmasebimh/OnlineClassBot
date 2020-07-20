@@ -1,3 +1,6 @@
 /files/
 /comment/
 /user.db
+/dist/
+/build/
+/venv/
