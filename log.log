@@ -1,0 +1,407 @@
+2020-07-16 03:25:53,020 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 128, in otherCalback
+    else:
+  File "<decorator-gen-23>", line 2, in get_file
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\bot.py", line 67, in decorator
+    result = func(*args, **kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\bot.py", line 1698, in get_file
+    result = self._request.post(url, data, timeout=timeout)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 333, in post
+    **urlopen_kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 244, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: File is too big
+2020-07-16 04:02:52,050 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 149, in otherCalback
+    if update.message.type == 'group' and update.message.title == 'ApBotGroup':
+AttributeError: 'Message' object has no attribute 'type'
+2020-07-16 04:04:25,765 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 148, in otherCalback
+    print(update.message.type)
+AttributeError: 'Message' object has no attribute 'type'
+2020-07-16 04:05:16,632 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 149, in otherCalback
+    print(update.message.type)
+AttributeError: 'Message' object has no attribute 'type'
+2020-07-16 04:06:56,923 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 153, in otherCalback
+    file_conn.execute(f"INSERT INTO CLASS_FILE (CHATI_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+AttributeError: 'NoneType' object has no attribute 'file_name'
+2020-07-16 04:08:35,643 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 153, in otherCalback
+    file_conn.execute(f"INSERT INTO CLASS_FILE (CHATI_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+AttributeError: 'NoneType' object has no attribute 'file_name'
+2020-07-16 04:09:26,174 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 151, in otherCalback
+    file_conn.execute(f"INSERT INTO CLASS_FILE (CHATI_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+AttributeError: 'NoneType' object has no attribute 'file_name'
+2020-07-16 04:10:05,717 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 151, in otherCalback
+    file_conn.execute(f"INSERT INTO CLASS_FILE (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+AttributeError: 'NoneType' object has no attribute 'file_name'
+2020-07-16 04:13:18,443 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 159, in otherCalback
+    class_file_list_inner_courser = conn.execute("SELECT * FROM CLASS_FILE")
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 65824 and this is thread id 63444.
+2020-07-16 04:13:43,899 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 159, in otherCalback
+    class_file_list_inner_courser = conn.execute("SELECT * FROM CLASS_FILE")
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 65824 and this is thread id 63444.
+2020-07-16 04:14:45,516 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 152, in otherCalback
+    print(str(update.message.document.file_name))
+AttributeError: 'NoneType' object has no attribute 'file_name'
+2020-07-16 04:21:10,391 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 216, in videoCalBack
+    file_conn.execute(f"INSERT INTO CLASS_FILE (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+AttributeError: 'Video' object has no attribute 'file_name'
+2020-07-16 04:22:08,709 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 217, in videoCalBack
+    file_conn.execute(f"INSERT INTO CLASS_FILE (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+AttributeError: 'Video' object has no attribute 'file_name'
+2020-07-16 04:23:11,707 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 216, in videoCalBack
+    print(str(update.message.video.file_name))
+AttributeError: 'Video' object has no attribute 'file_name'
+2020-07-16 04:33:06,126 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 158, in otherCalback
+    class_file_list_inner_courser = conn.execute("SELECT * FROM CLASS_FILE")
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 73972 and this is thread id 50284.
+2020-07-16 04:35:07,579 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 21, in start
+    start_conn.execute(f"INSERT INTO USER (FIRST_NAME, LAST_NAME, USER_NAME, CHAT_ID, STUDENT_NUMBER) "
+sqlite3.IntegrityError: UNIQUE constraint failed: USER.CHAT_ID
+2020-07-16 04:35:16,061 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 114, in handleTextMessage
+    reply_markup=keyboard_button_class_file)
+NameError: name 'keyboard_button_class_file' is not defined
+2020-07-16 04:35:27,828 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 114, in handleTextMessage
+    reply_markup=keyboard_button_class_file)
+NameError: name 'keyboard_button_class_file' is not defined
+2020-07-16 04:39:46,289 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 159, in otherCalback
+    class_file_list_inner_courser = conn.execute("SELECT * FROM CLASS_FILE")
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 74676 and this is thread id 68516.
+2020-07-18 00:10:22,595 - telegram.ext.updater - ERROR - Error while getting Updates: urllib3 HTTPError ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2020-07-18 00:10:22,602 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 617, in urlopen
+    chunked=chunked)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 402, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 2, in raise_from
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 398, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\http\client.py", line 1344, in getresponse
+    response.begin()
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\http\client.py", line 306, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\http\client.py", line 267, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\socket.py", line 589, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\ssl.py", line 1071, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\ssl.py", line 929, in read
+    return self._sslobj.read(len, buffer)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 224, in _request_wrapper
+    resp = self._con_pool.request(*args, **kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\request.py", line 70, in request
+    **urlopen_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\request.py", line 148, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\poolmanager.py", line 244, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 666, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\util\retry.py", line 347, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\packages\six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 617, in urlopen
+    chunked=chunked)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 402, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 2, in raise_from
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 398, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\http\client.py", line 1344, in getresponse
+    response.begin()
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\http\client.py", line 306, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\http\client.py", line 267, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\socket.py", line 589, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\ssl.py", line 1071, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python37\lib\ssl.py", line 929, in read
+    return self._sslobj.read(len, buffer)
+telegram.vendor.ptb_urllib3.urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\updater.py", line 379, in _network_loop_retry
+    if not action_cb():
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\updater.py", line 340, in polling_action_cb
+    allowed_updates=allowed_updates)
+  File "<decorator-gen-31>", line 2, in get_updates
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\bot.py", line 67, in decorator
+    result = func(*args, **kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\bot.py", line 2138, in get_updates
+    result = self._request.post(url, data, timeout=float(read_latency) + float(timeout))
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 333, in post
+    **urlopen_kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 230, in _request_wrapper
+    raise NetworkError('urllib3 HTTPError {}'.format(error))
+telegram.error.NetworkError: urllib3 HTTPError ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2020-07-18 00:10:28,853 - telegram.vendor.ptb_urllib3.urllib3.connectionpool - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None)) after connection broken by 'ConnectTimeoutError(<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2BD14C8>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)')': /bot1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc/getUpdates
+2020-07-18 00:10:33,889 - telegram.vendor.ptb_urllib3.urllib3.connectionpool - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None)) after connection broken by 'ConnectTimeoutError(<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2CC4AC8>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)')': /bot1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc/getUpdates
+2020-07-18 00:10:38,911 - telegram.vendor.ptb_urllib3.urllib3.connectionpool - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None)) after connection broken by 'ConnectTimeoutError(<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2CCE088>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)')': /bot1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc/getUpdates
+2020-07-18 00:10:43,927 - telegram.ext.updater - ERROR - Error while getting Updates: urllib3 HTTPError HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /bot1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc/getUpdates (Caused by ConnectTimeoutError(<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2CCE148>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)'))
+2020-07-18 00:10:43,927 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connection.py", line 141, in _new_conn
+    (self.host, self.port), self.timeout, **extra_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\util\connection.py", line 83, in create_connection
+    raise err
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 617, in urlopen
+    chunked=chunked)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 360, in _make_request
+    self._validate_conn(conn)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 857, in _validate_conn
+    super(HTTPSConnectionPool, self)._validate_conn(conn)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 289, in _validate_conn
+    conn.connect()
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connection.py", line 284, in connect
+    conn = self._new_conn()
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connection.py", line 146, in _new_conn
+    (self.host, self.timeout))
+telegram.vendor.ptb_urllib3.urllib3.exceptions.ConnectTimeoutError: (<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2CCE148>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 224, in _request_wrapper
+    resp = self._con_pool.request(*args, **kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\request.py", line 70, in request
+    **urlopen_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\request.py", line 148, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\poolmanager.py", line 244, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 695, in urlopen
+    **response_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 695, in urlopen
+    **response_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 695, in urlopen
+    **response_kw)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\connectionpool.py", line 666, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\vendor\ptb_urllib3\urllib3\util\retry.py", line 376, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+telegram.vendor.ptb_urllib3.urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /bot1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc/getUpdates (Caused by ConnectTimeoutError(<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2CCE148>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\updater.py", line 379, in _network_loop_retry
+    if not action_cb():
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\updater.py", line 340, in polling_action_cb
+    allowed_updates=allowed_updates)
+  File "<decorator-gen-31>", line 2, in get_updates
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\bot.py", line 67, in decorator
+    result = func(*args, **kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\bot.py", line 2138, in get_updates
+    result = self._request.post(url, data, timeout=float(read_latency) + float(timeout))
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 333, in post
+    **urlopen_kwargs)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\utils\request.py", line 230, in _request_wrapper
+    raise NetworkError('urllib3 HTTPError {}'.format(error))
+telegram.error.NetworkError: urllib3 HTTPError HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /bot1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc/getUpdates (Caused by ConnectTimeoutError(<telegram.vendor.ptb_urllib3.urllib3.connection.VerifiedHTTPSConnection object at 0x0000022DC2CCE148>, 'Connection to api.telegram.org timed out. (connect timeout=5.0)'))
+2020-07-20 23:42:23,341 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 95, in handleTextMessage
+    sendMessageToAllUser(update, context, users_list)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 197, in sendMessageToAllUser
+    context.bot.send_message(chat_id=user[4], msg=update.message)
+TypeError: send_message() missing 1 required positional argument: 'text'
+2020-07-20 23:44:08,547 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 95, in handleTextMessage
+    sendMessageToAllUser(update, context, users_list)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 205, in sendMessageToAllUser
+    context.bot.send_message(chat_id=user[4], msg=update.message)
+TypeError: send_message() missing 1 required positional argument: 'text'
+2020-07-20 23:44:50,356 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 95, in handleTextMessage
+    sendMessageToAllUser(update, context, users_list)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 206, in sendMessageToAllUser
+    context.bot.send_message(chat_id=user[4], msg=update.message)
+TypeError: send_message() missing 1 required positional argument: 'text'
+2020-07-21 00:02:17,882 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 95, in handleTextMessage
+    sendMessageToAllUser(update, context, users_list)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 217, in sendMessageToAllUser
+    context.bot.send_message(chat_id=user[4], text=update.message.video.file_id)
+AttributeError: 'NoneType' object has no attribute 'file_id'
+2020-07-21 00:03:09,261 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 95, in handleTextMessage
+    sendMessageToAllUser(update, context, users_list)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 218, in sendMessageToAllUser
+    context.bot.send_message(chat_id=user[4], text=update.message.video.file_id)
+AttributeError: 'NoneType' object has no attribute 'file_id'
+2020-07-21 00:06:15,781 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 127, in DocumentCallBack
+    sendMessageToAllUser(update, context, users_list, type="DOC")
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 211, in sendMessageToAllUser
+    context.bot.send_document(chat_id=user[4], msg=update.message, caption=update.message.caption)
+TypeError: send_document() missing 1 required positional argument: 'document'
+2020-07-21 00:08:04,532 - telegram.ext.dispatcher - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\dispatcher.py", line 340, in process_update
+    handler.handle_update(update, self, check, context)
+  File "C:\Users\Asus\PycharmProjects\TelegramBot\venv\lib\site-packages\telegram\ext\handler.py", line 119, in handle_update
+    return self.callback(update, context)
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 196, in videoCalBack
+    sendMessageToAllUser(update, context, users_list, "VIDEO")
+  File "C:/Users/Asus/PycharmProjects/TelegramBot/Main.py", line 217, in sendMessageToAllUser
+    caption=update.message.caption)
+TypeError: send_video() missing 1 required positional argument: 'video'
