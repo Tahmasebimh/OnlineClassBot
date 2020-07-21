@@ -8,14 +8,12 @@ from pathlib import Path
 import csv
 import os
 import sqlite3
+from adminmode import AdminMode
 
 
 def start(update, context):
     print(update.message)
     logging.debug(update.message.text)
-    # start_conn.execute(f'''INSERT INTO USER (FIRST_NAME, LAST_NAME, USER_NAME, CHAT_ID)
-    #     VALUES ({str(update.effective_chat.first_name)}, {str(update.effective_chat.last_name)},
-    #             {str(update.effective_chat.username)}, {str(update.effective_chat.id)}, NULL );''')
     try:
         start_conn = sqlite3.connect("user.db")
         start_conn.execute(f"INSERT INTO USER (FIRST_NAME, LAST_NAME, USER_NAME, CHAT_ID, STUDENT_NUMBER) "
@@ -29,15 +27,27 @@ def start(update, context):
         users_list = cursor_start.fetchall()
         start_conn.close()
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="به بات درس برنامه سازی پیشرفته خوش آمدید")
+                                 text="به بات درس برنامه سازی پیشرفته خوش آمدید",
+                                 reply_markup=kb_markup)
     except ValueError:
         print(ValueError)
 
 
-def echoImage(update, context):
+def handleImage(update, context):
     print(update.message)
-    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotEchoChat':
-        sendMessageToAllUser(update, context, users_list, "IMAGE")
+    global admin_mode
+    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+        if admin_mode == AdminMode.PUBLIC_MESSAGE:
+            sendMessageToAllUser(update, context, users_list, "IMAGE")
+            admin_mode = AdminMode.UNKNOWN
+        elif admin_mode == AdminMode.UNKNOWN:
+            sendWhatCanIdo(context, update)
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text='ارسال عکس فقط در حالت پیام عمومی قابل استفاده است',
+                                     reply_markup=kb_markup_admin_mode)
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
     else:
         file = bot.getFile(update.message.photo[1].file_id)
         passvnad = file.file_path.split('.')[len(file.file_path.split('.')) - 1]
@@ -52,11 +62,16 @@ def echoImage(update, context):
 
 def handleTextMessage(update, context):
     print(update)
+    global admin_mode
     print(str(update.message.text == GET_CLASS_VIDEO))
     if update.message.text == BACK_TEXT:
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="چه کاری انجام بدم؟",
-                                 reply_markup=kb_markup)
+        if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="چه کاری انجام بدم؟",
+                                     reply_markup=kb_markup)
     elif update.message.text == GET_MY_FILE_TEXT:
         user_id = getUserIdFromCharId(update.effective_chat.id)
         print("user id : " + str(user_id))
@@ -91,8 +106,41 @@ def handleTextMessage(update, context):
         context.bot.send_document(chat_id=update.effective_chat.id,
                                   document=getClassFileId(update.message.text),
                                   reply_markup=keyboard_button_class_file)
-    elif update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotEchoChat':
-        sendMessageToAllUser(update, context, users_list)
+    elif update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+        print(f'in admin mode, mode: {admin_mode} and {admin_mode == AdminMode.UNKNOWN}')
+        if admin_mode == AdminMode.UNKNOWN:
+            if update.message.text == MODE_HW:
+                admin_mode = AdminMode.SEND_HW
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='لطفا فایل تمرین را ارسال کنید',
+                                         reply_markup=kb_markup_admin_mode_back)
+            elif update.message.text == MODE_CLASS:
+                admin_mode = AdminMode.SEND_CLASS_VIDEO
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='لطفا فایل ویدئو کلاس را ارسال کنید',
+                                         reply_markup=kb_markup_admin_mode_back)
+            elif update.message.text == MODE_PUBLIC_MESSAGE:
+                admin_mode = AdminMode.PUBLIC_MESSAGE
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='لطفا پیام خود را برای ارسال به تمامی اعضا کنید',
+                                         reply_markup=kb_markup_admin_mode_back)
+            else:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='ارسال پیام فقط در حالت پیام عمومی قابل استفاده است',
+                                         reply_markup=kb_markup_admin_mode)
+                sendWhatCanIdo(context, update)
+                admin_mode = AdminMode.UNKNOWN
+        elif admin_mode == AdminMode.PUBLIC_MESSAGE:
+            print('in send all message hastim')
+            sendWhatCanIdo(context, update)
+            sendMessageToAllUser(update, context, users_list)
+            admin_mode = AdminMode.UNKNOWN
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text='ارسال پیام فقط در حالت پیام عمومی قابل استفاده است',
+                                     reply_markup=kb_markup_admin_mode)
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
     else:
         with open('comment/comments.csv', mode='a', encoding="utf-8", newline='') as first_csv_file:
             inner_writer = csv.writer(first_csv_file)
@@ -115,40 +163,57 @@ def caps(update, context):
 
 def helpHandler(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  شماره  دانشجویی \n استفاده کنید \n"
+                             text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  9523078 \n استفاده کنید \n"
                                   " تمامی فایل های ارسالی شما در حافظه بات ذخیره می شود لیست فایل های ارسالی خود را می توانید با استفاده از گزینه های زیر دریافت کنید.",
                              reply_markup=kb_markup)
 
 
 def DocumentCallBack(update, context):
     print(update.message)
+    global admin_mode
     file_conn = sqlite3.connect("user.db")
-    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotEchoChat':
-        sendMessageToAllUser(update, context, users_list, type="DOC")
-    elif update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
-        file_conn.execute(f"INSERT INTO CLASS_FILE (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
-                          f"VALUES ('{str(update.effective_chat.id)}',"
-                          f" '{str(update.message.document.file_name)}',"
-                          f" '{str(update.message.document.file_id)}',"
-                          f" '{str(update.message.caption)}',"
-                          f" '{str(update.message.document.file_size)}');")
-        file_conn.commit()
-        global class_file_list
-        class_file_list.clear()
-        class_file_list_inner_courser = file_conn.execute("SELECT * FROM CLASS_FILE")
-        class_file_list = class_file_list_inner_courser.fetchall()
-        class_file_list_inner_courser.close()
-        global keyboard_button_class_file
-        keyboard_button_arrays.clear()
-        for class_file in class_file_list:
-            keyboard_button_arrays.append([tele.KeyboardButton(class_file[2])])
-        if len(keyboard_button_arrays) > 0:
-            keyboard_button_arrays.append([BACK_TEXT])
-            keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
-                                                                  resize_keyboard=True)
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="فایل ارسالی ذخیره شد",
-                                 reply_markup=kb_markup)
+    # if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotEchoChat':
+    # el
+    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+        if admin_mode == AdminMode.SEND_CLASS_VIDEO:
+            file_conn.execute(f"INSERT INTO CLASS_FILE (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+                              f"VALUES ('{str(update.effective_chat.id)}',"
+                              f" '{str(update.message.document.file_name)}',"
+                              f" '{str(update.message.document.file_id)}',"
+                              f" '{str(update.message.caption)}',"
+                              f" '{str(update.message.document.file_size)}');")
+            file_conn.commit()
+            global class_file_list
+            class_file_list.clear()
+            class_file_list_inner_courser = file_conn.execute("SELECT * FROM CLASS_FILE")
+            class_file_list = class_file_list_inner_courser.fetchall()
+            class_file_list_inner_courser.close()
+            global keyboard_button_class_file
+            keyboard_button_arrays.clear()
+            for class_file in class_file_list:
+                keyboard_button_arrays.append([tele.KeyboardButton(class_file[2])])
+            if len(keyboard_button_arrays) > 0:
+                keyboard_button_arrays.append([BACK_TEXT])
+                keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
+                                                                      resize_keyboard=True)
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="فایل ارسالی ذخیره شد",
+                                     reply_markup=kb_markup_admin_mode)
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
+        elif admin_mode == AdminMode.SEND_HW:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="هنوز پیاده سازی نشده!",
+                                     reply_markup=kb_markup_admin_mode)
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
+        elif admin_mode == AdminMode.PUBLIC_MESSAGE:
+            sendMessageToAllUser(update, context, users_list, type="DOC")
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
+        else:
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
     else:
         Path(FILE_PATH + '/' + str(update.effective_chat.first_name) +
              str(update.effective_chat.last_name)).mkdir(parents=True, exist_ok=True)
@@ -168,6 +233,12 @@ def DocumentCallBack(update, context):
                                  text="فایل ارسالی ذخیره شد",
                                  reply_markup=kb_markup)
     file_conn.close()
+
+
+def sendWhatCanIdo(context, update):
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text='لطفا عملیات مورد نظر خود را مشخص کنید',
+                             reply_markup=kb_markup_admin_mode)
 
 
 def handleStudentNumberCallBack(update, context):
@@ -192,8 +263,18 @@ def handleStudentNumberCallBack(update, context):
 
 def videoCalBack(update, context):
     print(update.message)
-    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotEchoChat':
-        sendMessageToAllUser(update, context, users_list, "VIDEO")
+    global admin_mode
+    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+        if admin_mode == AdminMode.PUBLIC_MESSAGE:
+            sendMessageToAllUser(update, context, users_list, "VIDEO")
+            admin_mode = AdminMode.UNKNOWN
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text='ارسال فیلم فقط در حالت پیام عمومی قابل استفاده است',
+                                     reply_markup=kb_markup_admin_mode)
+            admin_mode = AdminMode.UNKNOWN
+            sendWhatCanIdo(context, update)
+
     else:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="این فرمت پشتیبانی نمی شود",
@@ -203,17 +284,21 @@ def videoCalBack(update, context):
 def sendMessageToAllUser(update, context, users_list, type='TEXT'):
     for user in users_list:
         if int(user[4]) > 0:
-            if type == 'DOC':
-                context.bot.send_document(chat_id=user[4], document=update.message.document.file_id,
-                                          caption=update.message.caption, reply_markup=kb_markup)
-            elif type == 'IMAGE':
-                context.bot.send_photo(chat_id=user[4], photo=update.message.photo[1], caption=update.message.caption
-                                       , reply_markup=kb_markup)
-            elif type == 'VIDEO':
-                context.bot.send_video(chat_id=user[4], video=update.message.video.file_id,
-                                       caption=update.message.caption, reply_markup=kb_markup)
-            else:
-                context.bot.send_message(chat_id=user[4], text=update.message.text, reply_markup=kb_markup)
+            try:
+                if type == 'DOC':
+                    context.bot.send_document(chat_id=user[4], document=update.message.document.file_id,
+                                              caption=update.message.caption, reply_markup=kb_markup)
+                elif type == 'IMAGE':
+                    context.bot.send_photo(chat_id=user[4], photo=update.message.photo[1],
+                                           caption=update.message.caption
+                                           , reply_markup=kb_markup)
+                elif type == 'VIDEO':
+                    context.bot.send_video(chat_id=user[4], video=update.message.video.file_id,
+                                           caption=update.message.caption, reply_markup=kb_markup)
+                else:
+                    context.bot.send_message(chat_id=user[4], text=update.message.text, reply_markup=kb_markup)
+            except Exception as ex:
+                print(f"{ex}")
 
 
 def getUserIdFromCharId(chat_id):
@@ -257,6 +342,10 @@ FILE_PATH = "files"
 GET_MY_FILE_TEXT = 'فایل های تحویلی من'
 GET_CLASS_VIDEO = 'دریافت جلسات کلاس'
 BACK_TEXT = "بازگشت"
+admin_mode = AdminMode.UNKNOWN
+MODE_HW = 'ارسال تمرین'
+MODE_CLASS = 'ارسال ویدئو کلاس'
+MODE_PUBLIC_MESSAGE = 'ارسال پیام به همه'
 
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
@@ -271,7 +360,7 @@ help_handler = cmdHandler('help', helpHandler)
 dispatcher.add_handler(help_handler)
 student_number_handler = cmdHandler('studentnum', handleStudentNumberCallBack)
 dispatcher.add_handler(student_number_handler)
-echoImage_handler = MessageHandler(Filters.photo & (~Filters.command), echoImage)
+echoImage_handler = MessageHandler(Filters.photo & (~Filters.command), handleImage)
 dispatcher.add_handler(echoImage_handler)
 otherFile_handler = MessageHandler(Filters.document, DocumentCallBack)
 dispatcher.add_handler(otherFile_handler)
@@ -295,6 +384,14 @@ bot = tele.Bot(token=TOKEN)
 # kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton('تست')]]
 kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton(GET_CLASS_VIDEO)]]
 kb_markup = tele.ReplyKeyboardMarkup(kb, resize_keyboard=True)
+
+kb_admin_mode = [
+    [tele.KeyboardButton(MODE_HW), tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)]]
+kb_markup_admin_mode = tele.ReplyKeyboardMarkup(kb_admin_mode, resize_keyboard=True)
+
+kb_admin_back = [[tele.KeyboardButton(BACK_TEXT)]]
+kb_markup_admin_mode_back = tele.ReplyKeyboardMarkup(kb_admin_back, resize_keyboard=True)
+
 # Create data base
 conn = sqlite3.connect("user.db")
 conn.execute('''CREATE TABLE IF NOT EXISTS  USER 
@@ -330,7 +427,6 @@ file_cursor.close()
 class_file_list_courser = conn.execute("SELECT * FROM CLASS_FILE")
 class_file_list = class_file_list_courser.fetchall()
 class_file_list_courser.close()
-print(conn.execute(f"SELECT ID FROM USER WHERE CHAT_ID='244106511'").fetchall())
 conn.close()
 
 keyboard_button_arrays = []
@@ -341,4 +437,3 @@ if len(class_file_list) > 0:
         keyboard_button_arrays.append([BACK_TEXT])
         keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
                                                               resize_keyboard=True)
-
