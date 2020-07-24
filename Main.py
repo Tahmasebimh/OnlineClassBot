@@ -298,7 +298,8 @@ def sendMessageToAllUser(update, context, users_list, type='TEXT'):
                 else:
                     context.bot.send_message(chat_id=user[4], text=update.message.text, reply_markup=kb_markup)
             except Exception as ex:
-                print(f"{ex}")
+                logging.debug(f"{ex} User id : {user}")
+                print(f"{ex} User id : {user}")
 
 
 def getUserIdFromCharId(chat_id):
