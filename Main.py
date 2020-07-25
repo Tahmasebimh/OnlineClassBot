@@ -9,6 +9,9 @@ import csv
 import os
 import sqlite3
 from adminmode import AdminMode
+import asyncio
+import sched, time
+
 
 
 def start(update, context):
@@ -338,6 +341,32 @@ def isFileName(text, user_id):
     return False
 
 
+async def updateFileList():
+    global file_list, users_list, class_file_list, keyboard_button_arrays, keyboard_button_class_file
+    await asyncio.sleep(30)
+    while True:
+        print("asyncio called !!")
+        connection = sqlite3.connect("user.db")
+        cursor_inner = connection.execute("SELECT * FROM USER")
+        users_list = cursor_inner.fetchall()
+        cursor_inner.close()
+        file_cursor_inner = connection.execute("SELECT * FROM FILE")
+        file_list = file_cursor_inner.fetchall()
+        file_cursor_inner.close()
+        class_file_list_courser_inner = connection.execute("SELECT * FROM CLASS_FILE")
+        class_file_list = class_file_list_courser_inner.fetchall()
+        class_file_list_courser_inner.close()
+        connection.close()
+        keyboard_button_arrays = []
+        if len(class_file_list) > 0:
+            for file in class_file_list:
+                keyboard_button_arrays.append([tele.KeyboardButton(file[2])])
+            if len(keyboard_button_arrays) > 0:
+                keyboard_button_arrays.append([BACK_TEXT])
+                keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
+                                                                      resize_keyboard=True)
+        await asyncio.sleep(30 * 60)
+
 TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
 FILE_PATH = "files"
 GET_MY_FILE_TEXT = 'فایل های تحویلی من'
@@ -430,6 +459,7 @@ class_file_list = class_file_list_courser.fetchall()
 class_file_list_courser.close()
 conn.close()
 
+
 keyboard_button_arrays = []
 if len(class_file_list) > 0:
     for file in class_file_list:
@@ -438,3 +468,6 @@ if len(class_file_list) > 0:
         keyboard_button_arrays.append([BACK_TEXT])
         keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
                                                               resize_keyboard=True)
+
+if __name__ == '__main__':
+    asyncio.run(updateFileList())
