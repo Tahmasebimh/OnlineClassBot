@@ -1,8 +1,6 @@
 import telegram as tele
-from telegram.ext import Updater
-from telegram.ext import CommandHandler as cmdHandler
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler as cmdHandler
 import logging
-from telegram.ext import MessageHandler, Filters
 import urllib.request
 from pathlib import Path
 import csv
@@ -11,7 +9,6 @@ import sqlite3
 from adminmode import AdminMode
 import asyncio
 import sched, time
-
 
 
 def start(update, context):
@@ -343,7 +340,7 @@ def isFileName(text, user_id):
 
 async def updateFileList():
     global file_list, users_list, class_file_list, keyboard_button_arrays, keyboard_button_class_file
-    await asyncio.sleep(30)
+    await asyncio.sleep(30 * 60)
     while True:
         print("asyncio called !!")
         connection = sqlite3.connect("user.db")
@@ -366,6 +363,7 @@ async def updateFileList():
                 keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
                                                                       resize_keyboard=True)
         await asyncio.sleep(30 * 60)
+
 
 TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
 FILE_PATH = "files"
@@ -458,7 +456,6 @@ class_file_list_courser = conn.execute("SELECT * FROM CLASS_FILE")
 class_file_list = class_file_list_courser.fetchall()
 class_file_list_courser.close()
 conn.close()
-
 
 keyboard_button_arrays = []
 if len(class_file_list) > 0:
