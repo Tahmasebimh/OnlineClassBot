@@ -62,7 +62,7 @@ def handleImage(update, context):
 
 def handleTextMessage(update, context):
     print(update)
-    global admin_mode
+    global admin_mode, class_file_list_tag
     print(str(update.message.text == GET_CLASS_VIDEO))
     if update.message.text == BACK_TEXT:
         if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
@@ -74,7 +74,6 @@ def handleTextMessage(update, context):
                                      reply_markup=kb_markup)
     elif update.message.text == GET_MY_FILE_TEXT:
         user_id = getUserIdFromCharId(update.effective_chat.id)
-        print("user id : " + str(user_id))
         file_list_message = ''
         keyboard_button_arrays = []
         for file in file_list:
@@ -98,14 +97,27 @@ def handleTextMessage(update, context):
                                   document=getFileId(update.message.text,
                                                      getUserIdFromCharId(update.effective_chat.id)))
     elif update.message.text == GET_CLASS_VIDEO:
-        print('inja')
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="جلسه مورد نظر را انتخاب کنید",
                                  reply_markup=keyboard_button_class_file)
+    elif update.message.text == GET_CLASS_VIDEO_TAG:
+        if len(class_file_list_tag) > 0:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="تگ جلسه مورد نظر را انتخاب کنید",
+                                     reply_markup=keyboard_button_class_file_tag)
+        else:
+            print("ITs none")
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="تگی وجود ندارد",
+                                     reply_markup=kb_markup)
     elif isClassFIleName(update.message.text):
         context.bot.send_document(chat_id=update.effective_chat.id,
                                   document=getClassFileId(update.message.text),
                                   reply_markup=keyboard_button_class_file)
+    elif isClassFIleTagName(update.message.text):
+        context.bot.send_document(chat_id=update.effective_chat.id,
+                                  document=getClassFileTagId(update.message.text),
+                                  reply_markup=keyboard_button_class_file_tag)
     elif update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
         print(f'in admin mode, mode: {admin_mode} and {admin_mode == AdminMode.UNKNOWN}')
         if admin_mode == AdminMode.UNKNOWN:
@@ -118,6 +130,11 @@ def handleTextMessage(update, context):
                 admin_mode = AdminMode.SEND_CLASS_VIDEO
                 context.bot.send_message(chat_id=update.effective_chat.id,
                                          text='لطفا فایل ویدئو کلاس را ارسال کنید',
+                                         reply_markup=kb_markup_admin_mode_back)
+            elif update.message.text == MODE_CLASS_TAG:
+                admin_mode = AdminMode.SEND_CLASS_VIDEO_TAG
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='لطفا تگ ویدئو کلاس را ارسال کنید',
                                          reply_markup=kb_markup_admin_mode_back)
             elif update.message.text == MODE_PUBLIC_MESSAGE:
                 admin_mode = AdminMode.PUBLIC_MESSAGE
@@ -196,6 +213,32 @@ def DocumentCallBack(update, context):
                 keyboard_button_arrays.append([BACK_TEXT])
                 keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
                                                                       resize_keyboard=True)
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="فایل ارسالی ذخیره شد",
+                                     reply_markup=kb_markup_admin_mode)
+            sendWhatCanIdo(context, update)
+            admin_mode = AdminMode.UNKNOWN
+        elif admin_mode == AdminMode.SEND_CLASS_VIDEO_TAG:
+            file_conn.execute(f"INSERT INTO CLASS_FILE_TAG (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
+                              f"VALUES ('{str(update.effective_chat.id)}',"
+                              f" '{str(update.message.document.file_name)}',"
+                              f" '{str(update.message.document.file_id)}',"
+                              f" '{str(update.message.caption)}',"
+                              f" '{str(update.message.document.file_size)}');")
+            file_conn.commit()
+            global class_file_list_tag
+            class_file_list_tag.clear()
+            class_file_list_inner_courser = file_conn.execute("SELECT * FROM CLASS_FILE_TAG")
+            class_file_list_tag = class_file_list_inner_courser.fetchall()
+            class_file_list_inner_courser.close()
+            global keyboard_button_class_file_tag
+            keyboard_button_arrays_tag.clear()
+            for class_file in class_file_list_tag:
+                keyboard_button_arrays_tag.append([tele.KeyboardButton(class_file[2])])
+            if len(keyboard_button_arrays_tag) > 0:
+                keyboard_button_arrays_tag.append([BACK_TEXT])
+                keyboard_button_class_file_tag = tele.ReplyKeyboardMarkup(keyboard_button_arrays_tag,
+                                                                          resize_keyboard=True)
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text="فایل ارسالی ذخیره شد",
                                      reply_markup=kb_markup_admin_mode)
@@ -324,8 +367,21 @@ def isClassFIleName(text):
     return False
 
 
+def isClassFIleTagName(text):
+    for class_file in class_file_list_tag:
+        if class_file[2] == text:
+            return True
+    return False
+
+
 def getClassFileId(text):
     for f in class_file_list:
+        if text == f[2]:
+            return f[3]
+
+
+def getClassFileTagId(text):
+    for f in class_file_list_tag:
         if text == f[2]:
             return f[3]
 
@@ -369,10 +425,12 @@ TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
 FILE_PATH = "files"
 GET_MY_FILE_TEXT = 'فایل های تحویلی من'
 GET_CLASS_VIDEO = 'دریافت جلسات کلاس'
+GET_CLASS_VIDEO_TAG = 'دریافت تگ جلسات کلاس'
 BACK_TEXT = "بازگشت"
 admin_mode = AdminMode.UNKNOWN
 MODE_HW = 'ارسال تمرین'
 MODE_CLASS = 'ارسال ویدئو کلاس'
+MODE_CLASS_TAG = 'ارسال تگ ویدئو'
 MODE_PUBLIC_MESSAGE = 'ارسال پیام به همه'
 
 updater = Updater(token=TOKEN, use_context=True)
@@ -410,11 +468,13 @@ if not os.path.isfile('comment/comments.csv'):
 
 bot = tele.Bot(token=TOKEN)
 # kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton('تست')]]
-kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton(GET_CLASS_VIDEO)]]
+kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton(GET_CLASS_VIDEO)],
+      [tele.KeyboardButton(GET_CLASS_VIDEO_TAG)]]
 kb_markup = tele.ReplyKeyboardMarkup(kb, resize_keyboard=True)
 
 kb_admin_mode = [
-    [tele.KeyboardButton(MODE_HW), tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)]]
+    [tele.KeyboardButton(MODE_HW), tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)],
+    [tele.KeyboardButton(MODE_CLASS_TAG)]]
 kb_markup_admin_mode = tele.ReplyKeyboardMarkup(kb_admin_mode, resize_keyboard=True)
 
 kb_admin_back = [[tele.KeyboardButton(BACK_TEXT)]]
@@ -445,6 +505,14 @@ conn.execute('''CREATE TABLE IF NOT EXISTS CLASS_FILE
             CAPTION         TEXT,
             FILE_SIZE       TEXT
             );''')
+conn.execute('''CREATE TABLE IF NOT EXISTS CLASS_FILE_TAG
+            (ID INTEGER  PRIMARY KEY AUTOINCREMENT   NOT NULL,
+            CHAT_ID         TEXT,
+            FILE_NAME       TEXT, 
+            FILE_ID         TEXT,
+            CAPTION         TEXT,
+            FILE_SIZE       TEXT
+            );''')
 
 cursor = conn.execute("SELECT * FROM USER")
 users_list = cursor.fetchall()
@@ -454,6 +522,8 @@ file_list = file_cursor.fetchall()
 file_cursor.close()
 class_file_list_courser = conn.execute("SELECT * FROM CLASS_FILE")
 class_file_list = class_file_list_courser.fetchall()
+class_file_list_tag_courser = conn.execute("SELECT * FROM CLASS_FILE_TAG")
+class_file_list_tag = class_file_list_tag_courser.fetchall()
 class_file_list_courser.close()
 conn.close()
 
@@ -465,6 +535,15 @@ if len(class_file_list) > 0:
         keyboard_button_arrays.append([BACK_TEXT])
         keyboard_button_class_file = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
                                                               resize_keyboard=True)
+
+keyboard_button_arrays_tag = []
+if len(class_file_list_tag) > 0:
+    for file in class_file_list_tag:
+        keyboard_button_arrays_tag.append([tele.KeyboardButton(file[2])])
+    if len(keyboard_button_arrays_tag) > 0:
+        keyboard_button_arrays_tag.append([BACK_TEXT])
+        keyboard_button_class_file_tag = tele.ReplyKeyboardMarkup(keyboard_button_arrays_tag,
+                                                                  resize_keyboard=True)
 
 if __name__ == '__main__':
     asyncio.run(updateFileList())
