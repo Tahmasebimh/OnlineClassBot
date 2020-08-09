@@ -432,12 +432,12 @@ async def updateFileList():
 
 FILE_PATH = "files"
 GET_MY_FILE_TEXT = 'فایل های تحویلی من'
-GET_CLASS_VIDEO = 'دریافت جلسات کلاس'
+GET_CLASS_VIDEO = 'دریافت محتوای کلاس'
 GET_CLASS_VIDEO_TAG = 'دریافت تگ جلسات کلاس'
 BACK_TEXT = "بازگشت"
 admin_mode = AdminMode.UNKNOWN
 MODE_HW = 'ارسال تمرین'
-MODE_CLASS = 'ارسال ویدئو کلاس'
+MODE_CLASS = 'ارسال محتوای کلاس'
 MODE_CLASS_TAG = 'ارسال تگ ویدئو'
 MODE_PUBLIC_MESSAGE = 'ارسال پیام به همه'
 
