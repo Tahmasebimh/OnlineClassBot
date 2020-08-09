@@ -13,6 +13,7 @@ import sched, time
 TOKEN = ''
 ADMIN_GROUP = ''
 WELCOME_MESSAGE = ''
+HELP_TEXT = ''
 
 with open('Environmental.csv', encoding="utf8") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
@@ -24,6 +25,7 @@ with open('Environmental.csv', encoding="utf8") as csv_file:
             TOKEN = row[0]
             ADMIN_GROUP = row[1]
             WELCOME_MESSAGE = row[2]
+            HELP_TEXT = row[3]
             line_count += 1
 
 
@@ -185,15 +187,11 @@ def handleTextMessage(update, context):
                                  reply_markup=kb_markup)
 
 
-
-
-
 def helpHandler(update, context):
     print(update.message)
     logging.debug(update.message.text)
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  9523078 \n استفاده کنید \n"
-                                  " تمامی فایل های ارسالی شما در حافظه بات ذخیره می شود لیست فایل های ارسالی خود را می توانید با استفاده از گزینه های زیر دریافت کنید.",
+                             text=f"{HELP_TEXT}",
                              reply_markup=kb_markup)
 
 
@@ -475,13 +473,11 @@ if not os.path.isfile('comment/comments.csv'):
 
 bot = tele.Bot(token=TOKEN)
 # kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton('تست')]]
-kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton(GET_CLASS_VIDEO)],
-      [tele.KeyboardButton(GET_CLASS_VIDEO_TAG)]]
+kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton(GET_CLASS_VIDEO)]]
 kb_markup = tele.ReplyKeyboardMarkup(kb, resize_keyboard=True)
 
 kb_admin_mode = [
-    [tele.KeyboardButton(MODE_HW), tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)],
-    [tele.KeyboardButton(MODE_CLASS_TAG)]]
+    [tele.KeyboardButton(MODE_HW), tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)]]
 kb_markup_admin_mode = tele.ReplyKeyboardMarkup(kb_admin_mode, resize_keyboard=True)
 
 kb_admin_back = [[tele.KeyboardButton(BACK_TEXT)]]
