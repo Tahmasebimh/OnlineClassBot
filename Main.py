@@ -476,8 +476,7 @@ bot = tele.Bot(token=TOKEN)
 kb = [[tele.KeyboardButton(GET_MY_FILE_TEXT), tele.KeyboardButton(GET_CLASS_VIDEO)]]
 kb_markup = tele.ReplyKeyboardMarkup(kb, resize_keyboard=True)
 
-kb_admin_mode = [
-    [tele.KeyboardButton(MODE_HW), tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)]]
+kb_admin_mode = [[tele.KeyboardButton(MODE_CLASS), tele.KeyboardButton(MODE_PUBLIC_MESSAGE)]]
 kb_markup_admin_mode = tele.ReplyKeyboardMarkup(kb_admin_mode, resize_keyboard=True)
 
 kb_admin_back = [[tele.KeyboardButton(BACK_TEXT)]]
