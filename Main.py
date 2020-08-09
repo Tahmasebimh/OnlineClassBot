@@ -10,6 +10,22 @@ from adminmode import AdminMode
 import asyncio
 import sched, time
 
+TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
+ADMIN_GROUP = ''
+WELCOME_MESSAGE = ''
+
+with open('Environmental.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            TOKEN = row[0]
+            ADMIN_GROUP = row[1]
+            WELCOME_MESSAGE = row[2]
+            line_count += 1
+
 
 def start(update, context):
     print(update.message)
@@ -27,7 +43,7 @@ def start(update, context):
         users_list = cursor_start.fetchall()
         start_conn.close()
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="به بات درس برنامه سازی پیشرفته خوش آمدید",
+                                 text=WELCOME_MESSAGE,
                                  reply_markup=kb_markup)
     except ValueError:
         print(ValueError)
@@ -35,8 +51,9 @@ def start(update, context):
 
 def handleImage(update, context):
     print(update.message)
+    logging.debug(update.message.text)
     global admin_mode
-    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+    if update.effective_chat.type == 'group' and update.effective_chat.title == ADMIN_GROUP:
         if admin_mode == AdminMode.PUBLIC_MESSAGE:
             sendMessageToAllUser(update, context, users_list, "IMAGE")
             admin_mode = AdminMode.UNKNOWN
@@ -61,11 +78,11 @@ def handleImage(update, context):
 
 
 def handleTextMessage(update, context):
-    print(update)
+    print(update.message)
+    logging.debug(update.message.text)
     global admin_mode, class_file_list_tag
-    print(str(update.message.text == GET_CLASS_VIDEO))
     if update.message.text == BACK_TEXT:
-        if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+        if update.effective_chat.type == 'group' and update.effective_chat.title == ADMIN_GROUP:
             sendWhatCanIdo(context, update)
             admin_mode = AdminMode.UNKNOWN
         else:
@@ -82,7 +99,6 @@ def handleTextMessage(update, context):
                 file_list_message = file_list_message + file[1] + "\n"
         if len(keyboard_button_arrays) > 0:
             keyboard_button_arrays.append([BACK_TEXT])
-            print(str(len(keyboard_button_arrays)))
             keyboard_button_markup = tele.ReplyKeyboardMarkup(keyboard_button_arrays,
                                                               resize_keyboard=True)
             context.bot.send_message(chat_id=update.effective_chat.id,
@@ -106,7 +122,6 @@ def handleTextMessage(update, context):
                                      text="تگ جلسه مورد نظر را انتخاب کنید",
                                      reply_markup=keyboard_button_class_file_tag)
         else:
-            print("ITs none")
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text="تگی وجود ندارد",
                                      reply_markup=kb_markup)
@@ -118,8 +133,7 @@ def handleTextMessage(update, context):
         context.bot.send_document(chat_id=update.effective_chat.id,
                                   document=getClassFileTagId(update.message.text),
                                   reply_markup=keyboard_button_class_file_tag)
-    elif update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
-        print(f'in admin mode, mode: {admin_mode} and {admin_mode == AdminMode.UNKNOWN}')
+    elif update.effective_chat.type == 'group' and update.effective_chat.title == ADMIN_GROUP:
         if admin_mode == AdminMode.UNKNOWN:
             if update.message.text == MODE_HW:
                 admin_mode = AdminMode.SEND_HW
@@ -148,7 +162,6 @@ def handleTextMessage(update, context):
                 sendWhatCanIdo(context, update)
                 admin_mode = AdminMode.UNKNOWN
         elif admin_mode == AdminMode.PUBLIC_MESSAGE:
-            print('in send all message hastim')
             sendWhatCanIdo(context, update)
             sendMessageToAllUser(update, context, users_list)
             admin_mode = AdminMode.UNKNOWN
@@ -172,13 +185,12 @@ def handleTextMessage(update, context):
                                  reply_markup=kb_markup)
 
 
-def caps(update, context):
-    text_caps = ' '.join(context.args).upper()
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text=text_caps)
+
 
 
 def helpHandler(update, context):
+    print(update.message)
+    logging.debug(update.message.text)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="شما در بات درس برنامه سازی پیشرفته ثبت نام شده اید برای ارسال شماره دانشجویی و یا ویرایش آن از دستور \n /studentnum  9523078 \n استفاده کنید \n"
                                   " تمامی فایل های ارسالی شما در حافظه بات ذخیره می شود لیست فایل های ارسالی خود را می توانید با استفاده از گزینه های زیر دریافت کنید.",
@@ -187,11 +199,12 @@ def helpHandler(update, context):
 
 def DocumentCallBack(update, context):
     print(update.message)
+    logging.debug(update.message.text)
     global admin_mode
     file_conn = sqlite3.connect("user.db")
     # if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotEchoChat':
     # el
-    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+    if update.effective_chat.type == 'group' and update.effective_chat.title == ADMIN_GROUP:
         if admin_mode == AdminMode.SEND_CLASS_VIDEO:
             file_conn.execute(f"INSERT INTO CLASS_FILE (CHAT_ID, FILE_NAME, FILE_ID, CAPTION, FILE_SIZE) "
                               f"VALUES ('{str(update.effective_chat.id)}',"
@@ -271,7 +284,6 @@ def DocumentCallBack(update, context):
         cursor_file = file_conn.execute("SELECT * FROM FILE")
         global file_list
         file_list = cursor_file.fetchall()
-        print(file_list)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="فایل ارسالی ذخیره شد",
                                  reply_markup=kb_markup)
@@ -285,6 +297,8 @@ def sendWhatCanIdo(context, update):
 
 
 def handleStudentNumberCallBack(update, context):
+    print(update.message)
+    logging.debug(update.message.text)
     if len(context.args) > 0:
         number = context.args[0]
         student_conn = sqlite3.connect("user.db")
@@ -306,8 +320,9 @@ def handleStudentNumberCallBack(update, context):
 
 def videoCalBack(update, context):
     print(update.message)
+    logging.debug(update.message.text)
     global admin_mode
-    if update.effective_chat.type == 'group' and update.effective_chat.title == 'ApBotGroup':
+    if update.effective_chat.type == 'group' and update.effective_chat.title == ADMIN_GROUP:
         if admin_mode == AdminMode.PUBLIC_MESSAGE:
             sendMessageToAllUser(update, context, users_list, "VIDEO")
             admin_mode = AdminMode.UNKNOWN
@@ -342,18 +357,15 @@ def sendMessageToAllUser(update, context, users_list, type='TEXT'):
                     context.bot.send_message(chat_id=user[4], text=update.message.text, reply_markup=kb_markup)
             except Exception as ex:
                 logging.debug(f"{ex} User id : {user}")
-                print(f"{ex} User id : {user}")
 
 
 def getUserIdFromCharId(chat_id):
     for user in users_list:
         if user[4] == str(chat_id):
-            print(user[4])
             return user[0]
 
 
 def getFileId(text, user_id):
-    print(file_list)
     for file in file_list:
         if file[3] == user_id:
             if text == file[1]:
@@ -398,7 +410,6 @@ async def updateFileList():
     global file_list, users_list, class_file_list, keyboard_button_arrays, keyboard_button_class_file
     await asyncio.sleep(30 * 60)
     while True:
-        print("asyncio called !!")
         connection = sqlite3.connect("user.db")
         cursor_inner = connection.execute("SELECT * FROM USER")
         users_list = cursor_inner.fetchall()
@@ -421,7 +432,6 @@ async def updateFileList():
         await asyncio.sleep(30 * 60)
 
 
-TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
 FILE_PATH = "files"
 GET_MY_FILE_TEXT = 'فایل های تحویلی من'
 GET_CLASS_VIDEO = 'دریافت جلسات کلاس'
@@ -440,8 +450,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 start_handler = cmdHandler('start', start)
 dispatcher.add_handler(start_handler)
-caps_handler = cmdHandler('caps', caps)
-dispatcher.add_handler(caps_handler)
 help_handler = cmdHandler('help', helpHandler)
 dispatcher.add_handler(help_handler)
 student_number_handler = cmdHandler('studentnum', handleStudentNumberCallBack)
@@ -458,7 +466,6 @@ updater.start_polling()
 
 # CSV file created if not exist
 if not os.path.isfile('comment/comments.csv'):
-    print("Create CSV")
     Path("comment").mkdir(parents=True, exist_ok=True)
     with open('comment/comments.csv', mode='w', newline='') as csv_file:
         fieldnames = ['First_Name', 'Last_Name', 'User_Name', 'Message']
