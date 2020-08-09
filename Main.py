@@ -45,8 +45,8 @@ def start(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text=WELCOME_MESSAGE,
                                  reply_markup=kb_markup)
-    except ValueError:
-        print(ValueError)
+    except Exception as ex:
+        print(ex)
 
 
 def handleImage(update, context):
