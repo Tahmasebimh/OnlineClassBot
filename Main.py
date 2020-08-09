@@ -10,7 +10,7 @@ from adminmode import AdminMode
 import asyncio
 import sched, time
 
-TOKEN = '1250087938:AAHzRycLJu1G2QUTE7O6a_bGfFDhFkswFsc'
+TOKEN = ''
 ADMIN_GROUP = ''
 WELCOME_MESSAGE = ''
 
